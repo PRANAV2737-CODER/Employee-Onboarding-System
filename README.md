@@ -29,6 +29,11 @@ Vite prints the local URL, usually http://localhost:5173.
 ## MongoDB Compass
 Local connection: `mongodb://127.0.0.1:27017/onboardly`
 
+## Deploy on Vercel
+The root `vercel.json` configures the `backend` Express service and `frontend` Vite service. Requests under `/api` are routed to the backend; all other paths are routed to the frontend. The frontend uses `/api` by default, so no frontend API URL is needed for the shared Vercel domain. Set `MONGO_URI` to a hosted MongoDB connection string and `JWT_SECRET` to a strong secret in the Vercel project environment before deploying.
+
+Uploaded documents currently use local disk storage. Vercel function filesystems are ephemeral, so uploads need persistent external object storage for production use.
+
 ## Included
 - Role-based JWT login (Admin/Employee)
 - Employee registration and admin employee management
