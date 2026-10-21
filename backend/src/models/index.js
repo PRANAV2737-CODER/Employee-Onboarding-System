@@ -1,0 +1,12 @@
+import mongoose from 'mongoose';
+const userSchema=new mongoose.Schema({name:{type:String,required:true,trim:true},email:{type:String,required:true,unique:true,lowercase:true,trim:true},password:{type:String,required:true,select:false},role:{type:String,enum:['admin','employee'],default:'employee'},active:{type:Boolean,default:true},employeeId:{type:String,unique:true,sparse:true},phone:{type:String,default:''},department:{type:String,default:''},designation:{type:String,default:''},joiningDate:Date,education:{type:String,default:''},emergencyContact:{type:String,default:''}},{timestamps:true});
+const docSchema=new mongoose.Schema({employee:{type:mongoose.Schema.Types.ObjectId,ref:'User',required:true},originalName:String,storedName:String,mimeType:String,size:Number,type:{type:String,default:'Other'},status:{type:String,enum:['Pending','Approved','Rejected'],default:'Pending'},rejectionReason:{type:String,default:''},reviewedBy:{type:mongoose.Schema.Types.ObjectId,ref:'User'},reviewedAt:Date},{timestamps:true});
+const taskSchema=new mongoose.Schema({name:String,completed:{type:Boolean,default:false},completedAt:Date},{_id:false});
+const onboardingSchema=new mongoose.Schema({employee:{type:mongoose.Schema.Types.ObjectId,ref:'User',unique:true,required:true},tasks:{type:[taskSchema],default:()=>['Complete personal information','Upload required documents','Verify documents','Admin approval','Review joining information'].map(name=>({name,completed:false}))}},{timestamps:true});
+const notificationSchema=new mongoose.Schema({recipient:{type:mongoose.Schema.Types.ObjectId,ref:'User',required:true},title:String,message:String,read:{type:Boolean,default:false},kind:{type:String,default:'info'}},{timestamps:true});
+const departmentSchema=new mongoose.Schema({name:{type:String,unique:true,required:true},description:{type:String,default:''}},{timestamps:true});
+export const User=mongoose.models.User||mongoose.model('User',userSchema);
+export const Document=mongoose.models.Document||mongoose.model('Document',docSchema);
+export const Onboarding=mongoose.models.Onboarding||mongoose.model('Onboarding',onboardingSchema);
+export const Notification=mongoose.models.Notification||mongoose.model('Notification',notificationSchema);
+export const Department=mongoose.models.Department||mongoose.model('Department',departmentSchema);
